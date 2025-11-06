@@ -1,0 +1,78 @@
+name: Gitflow CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'release/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  quality-checks:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -s requirements.txt ]; then
+            pip install -r requirements.txt
+          else
+            echo "requirements.txt empty; skipping installs"
+          fi
+
+      - name: Static analysis
+        run: |
+          if [ -d src ]; then
+            python -m compileall src
+          else
+            echo "src directory missing" && exit 1
+          fi
+
+      - name: Run tests
+        run: |
+          if [ -d tests ]; then
+            pytest
+          else
+            echo "tests/ not found; skipping"
+          fi
+
+  package-artifacts:
+    name: Package release artifacts
+    needs: quality-checks
+    if: >
+      github.event_name == 'push' &&
+      (github.ref == 'refs/heads/main' ||
+       startsWith(github.ref, 'refs/heads/release/') ||
+       startsWith(github.ref, 'refs/heads/hotfix/'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create bundle
+        run: |
+          mkdir -p dist
+          tar czf dist/pet-detection-yolov8.tar.gz \
+            README.md requirements.txt \
+            src data models notebooks outputs
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pet-detection-yolov8-${{ github.sha }}
+          path: dist/pet-detection-yolov8.tar.gz
