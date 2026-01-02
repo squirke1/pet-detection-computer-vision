@@ -67,9 +67,15 @@ jobs:
       - name: Create bundle
         run: |
           mkdir -p dist
+          # Create archive with only existing directories
           tar czf dist/pet-detection-yolov8.tar.gz \
-            README.md requirements.txt \
-            src data models notebooks outputs
+            --exclude='.git*' \
+            --exclude='*.pyc' \
+            --exclude='__pycache__' \
+            README.md requirements.txt src/ notebooks/ \
+            $([ -d models ] && echo "models/" || echo "") \
+            $([ -d data ] && echo "data/" || echo "") \
+            $([ -d outputs ] && echo "outputs/" || echo "")
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
