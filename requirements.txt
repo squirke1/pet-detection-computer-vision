@@ -1,0 +1,13 @@
+# Pet Detection Computer Vision - Step 1: Core Dependencies
+# Minimal setup for basic CV operations
+
+# Core Computer Vision
+opencv-python>=4.8.0
+numpy>=1.24.0
+
+# Visualization
+matplotlib>=3.7.0
+pillow>=10.0.0
+
+# Progress & utilities
+tqdm>=4.65.0
