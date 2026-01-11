@@ -224,7 +224,7 @@ class TestEndToEndWorkflow:
     def test_complete_detection_workflow(self, test_image_with_pet, tmp_path):
         """Test complete workflow: load -> detect -> save."""
         from utils import load_image, save_image
-        from ultralytics import YOLO
+        from ultralytics import YOLO  # type: ignore
         
         # Load model
         model = YOLO(str(MODEL_PATH))
