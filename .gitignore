@@ -1,0 +1,15 @@
+# Test Coverage Reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Pytest cache
+.pytest_cache/
+__pycache__/
+
+# Test outputs
+tests/fixtures/*.jpg
+tests/fixtures/*.png
+test_outputs/

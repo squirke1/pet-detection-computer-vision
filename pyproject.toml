@@ -1,0 +1,60 @@
+[tool.pytest.ini_options]
+# Pytest configuration for pet detection project
+
+# Test discovery
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Output options
+addopts = [
+    "-v",                          # Verbose output
+    "--strict-markers",            # Strict marker checking
+    "--tb=short",                  # Shorter traceback format
+    "--disable-warnings",          # Disable warnings in output
+    "-ra",                         # Show summary of all test outcomes
+]
+
+# Coverage options (if using pytest-cov)
+# Uncomment to enable coverage reporting
+# addopts = [
+#     "--cov=src",
+#     "--cov-report=html",
+#     "--cov-report=term-missing",
+# ]
+
+# Markers for test categorization
+markers = [
+    "unit: Unit tests for individual functions",
+    "integration: Integration tests for complete workflows",
+    "slow: Tests that take a long time to run",
+    "requires_model: Tests that require the YOLOv8 model file",
+]
+
+# Minimum Python version
+minversion = "7.0"
+
+# Test timeout (in seconds) - optional
+# timeout = 300
+
+[tool.coverage.run]
+# Coverage configuration
+source = ["src"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+# Coverage reporting
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
