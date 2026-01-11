@@ -44,7 +44,7 @@ def sample_gray_image():
 def sample_detections():
     """Sample detection data for testing."""
     return {
-        'boxes': [[10, 10, 50, 50], [60, 60, 90, 90]],
+        'boxes': [[10.0, 10.0, 50.0, 50.0], [60.0, 60.0, 90.0, 90.0]],
         'class_names': ['dog', 'cat'],
         'confidences': [0.95, 0.87],
         'class_ids': [0, 1]

@@ -73,14 +73,14 @@ class TestSaveImage:
         assert output_path.parent.exists()
     
     def test_save_invalid_image(self, tmp_path):
-        """Test saving invalid data returns False."""
+        """Test saving invalid data raises an exception."""
         output_path = tmp_path / "test.jpg"
-        invalid_data = "not an image"
+        invalid_data = "not an image"  # type: ignore
         
         # This should raise an exception, not return False
         # cv2.imwrite doesn't handle invalid data gracefully
         with pytest.raises((cv2.error, TypeError)):
-            save_image(invalid_data, str(output_path))
+            save_image(invalid_data, str(output_path))  # type: ignore
 
 
 class TestDrawDetections:
@@ -88,7 +88,7 @@ class TestDrawDetections:
     
     def test_draw_single_detection(self, sample_image):
         """Test drawing a single detection box."""
-        boxes = [[10, 10, 50, 50]]
+        boxes = [[10.0, 10.0, 50.0, 50.0]]
         class_names = ['dog']
         confidences = [0.95]
         class_ids = [0]
@@ -115,7 +115,7 @@ class TestDrawDetections:
     
     def test_draw_with_different_classes(self, sample_image):
         """Test drawing boxes for different classes (dog and cat)."""
-        boxes = [[10, 10, 40, 40], [50, 50, 80, 80]]
+        boxes = [[10.0, 10.0, 40.0, 40.0], [50.0, 50.0, 80.0, 80.0]]
         class_names = ['dog', 'cat']
         confidences = [0.9, 0.85]
         class_ids = [0, 1]
