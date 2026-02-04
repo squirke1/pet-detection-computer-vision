@@ -13,3 +13,9 @@ __pycache__/
 tests/fixtures/*.jpg
 tests/fixtures/*.png
 test_outputs/
+
+# Model files (tracked only in models/ directory)
+notebooks/*.pt
+
+# Documentation (local notes and planning)
+documentation/
