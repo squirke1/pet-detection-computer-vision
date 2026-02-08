@@ -308,6 +308,29 @@ python src/infer_on_video.py --webcam --display
 python src/infer_on_video.py --video input.mp4 --skip-frames 2
 ```
 
+### REST API & Web Interface
+
+Run the detection API server with web UI:
+
+```bash
+# Start API server
+python -m uvicorn api.main:app --reload
+
+# Or with Docker
+docker-compose up
+
+# Access web UI
+open http://localhost:8000
+```
+
+**API Endpoints:**
+- `POST /detect` - Upload image for pet detection
+- `GET /health` - Health check and model status
+- `GET /models` - List available models
+- `GET /docs` - Interactive API documentation
+
+See [API.md](API.md) for complete API documentation and examples.
+
 ### Model Training
 
 Train or fine-tune a YOLOv8 model on your custom dataset:
@@ -397,14 +420,25 @@ pet-detection-computer-vision/
 │  ├─ evaluate.py                # Model evaluation & metrics
 │  ├─ visualize_metrics.py       # Visualization tools
 │  └─ utils.py                   # Utility functions
+├─ api/
+│  ├─ main.py                    # FastAPI application
+│  ├─ models.py                  # Pydantic request/response models
+│  └─ inference.py               # Inference engine wrapper
+├─ examples/
+│  └─ api_client.py              # Python client examples
 ├─ outputs/
 │  ├─ detections/                # Detection results
 │  ├─ evaluation/                # Evaluation reports & plots
 │  └─ logs/                      # Execution logs
 ├─ documentation/
 │  └─ project-roadmap.md         # Development roadmap
-├─ requirements.txt
+├─ Dockerfile                    # Docker image definition
+├─ docker-compose.yml            # Docker Compose configuration
+├─ .dockerignore                 # Docker build exclusions
+├─ requirements.txt              # Python dependencies
+├─ api-requirements.txt          # API-specific dependencies
 ├─ README.md
+├─ API.md                        # API documentation
 ├─ TRAINING.md                   # Training documentation
 └─ LICENSE
 ```
@@ -492,18 +526,21 @@ For questions or discussions, please open an issue on GitHub.
 
 See [documentation/project-roadmap.md](documentation/project-roadmap.md) for detailed development plans.
 
-**Completed Features (v2.0):**
+**Completed Features (v2.1):**
 - ✅ Video processing and real-time detection
 - ✅ Model training and fine-tuning utilities
 - ✅ Model evaluation with comprehensive metrics
 - ✅ Batch processing optimization (multiprocessing)
 - ✅ Enhanced CV features integration
+- ✅ REST API with FastAPI
+- ✅ Docker containerization
+- ✅ Web UI for image upload
 
 **Upcoming Features:**
-- 🔍 Multi-object tracking across frames
-- 🌐 REST API and web interface
-- 🐳 Docker containerization
+- 🔍 Multi-object tracking across frames (DeepSORT/ByteTrack)
 - 📈 Advanced analytics and heatmaps
+- 🔐 API authentication and rate limiting
+- ☁️ Cloud deployment guides (AWS, GCP, Azure)
 
 ---
 
