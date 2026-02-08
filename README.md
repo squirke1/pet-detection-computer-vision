@@ -338,6 +338,58 @@ python src/track_video.py --video input.mp4 --tracker bytetrack.yaml
 - Track history recording
 - BoT-SORT or ByteTrack algorithms
 
+### Analytics & Heatmaps
+
+Analyze tracking data to generate insights and visualizations:
+
+```bash
+# Generate density heatmap
+python src/analyze_tracks.py --tracks outputs/tracks.json --heatmap heatmap.png
+
+# Zone analytics with statistics
+python src/analyze_tracks.py --tracks outputs/tracks.json \\
+    --zones config/zones.yaml \\
+    --zone-stats zone_stats.png \\
+    --zone-viz zones.png
+
+# Temporal activity analysis
+python src/analyze_tracks.py --tracks outputs/tracks.json --temporal timeline.png
+
+# Complete analysis with HTML report
+python src/analyze_tracks.py --tracks outputs/tracks.json \\
+    --zones config/zones.yaml \\
+    --all --output-dir outputs/analytics/
+
+# Generate interactive HTML report
+python src/analyze_tracks.py --tracks outputs/tracks.json --report report.html
+```
+
+**Analytics Features:**
+- **Density Heatmaps**: Visualize where pets spend the most time
+- **Zone Analytics**: Define ROIs and track visits/dwell time
+- **Temporal Patterns**: Activity timelines and histograms
+- **Movement Analysis**: Speed, distance, and trajectory patterns
+- **Interactive Reports**: HTML dashboards with statistics
+- **Class Filtering**: Analyze specific pet types (dogs vs cats)
+
+**Zone Configuration** (`config/zones.yaml`):
+```yaml
+zones:
+  - name: "Food Bowl"
+    x1: 100
+    y1: 100
+    x2: 300
+    y2: 300
+    color: [255, 165, 0]
+  
+  - name: "Play Area"
+    x1: 100
+    y1: 350
+    x2: 550
+    y2: 650
+    color: [50, 205, 50]
+```
+
 ### REST API & Web Interface
 
 Run the detection API server with web UI:
@@ -429,7 +481,8 @@ python src/visualize_metrics.py class-performance --metrics outputs/evaluation/m
 ```
 pet-detection-computer-vision/
 ├─ config/
-│  └─ data.yaml                  # Dataset configuration
+│  ├─ data.yaml                  # Dataset configuration
+│  └─ zones.yaml                 # Zone definitions for analytics
 ├─ data/
 │  ├─ raw/                       # Raw images
 │  ├─ processed/                 # Processed datasets
@@ -445,6 +498,7 @@ pet-detection-computer-vision/
 │  ├─ infer_on_folder.py         # Batch processing (multiprocessing)
 │  ├─ infer_on_video.py          # Video & webcam processing
 │  ├─ track_video.py             # Multi-object tracking
+│  ├─ analyze_tracks.py          # Track analytics & heatmaps
 │  ├─ infer_enhanced.py          # Enhanced inference with CV features
 │  ├─ train.py                   # Model training pipeline
 │  ├─ prepare_data.py            # Dataset preparation utilities
@@ -460,6 +514,7 @@ pet-detection-computer-vision/
 ├─ outputs/
 │  ├─ detections/                # Detection results
 │  ├─ evaluation/                # Evaluation reports & plots
+│  ├─ analytics/                 # Heatmaps & analytics reports
 │  └─ logs/                      # Execution logs
 ├─ documentation/
 │  └─ project-roadmap.md         # Development roadmap
@@ -557,9 +612,11 @@ For questions or discussions, please open an issue on GitHub.
 
 See [documentation/project-roadmap.md](documentation/project-roadmap.md) for detailed development plans.
 
-**Completed Features (v3.0):**
+**Completed Features (v3.2):**
 - ✅ Video processing and real-time detection
 - ✅ Multi-object tracking with persistent IDs
+- ✅ Analytics and heatmap generation
+- ✅ Zone-based activity analysis
 - ✅ Model training and fine-tuning utilities
 - ✅ Model evaluation with comprehensive metrics
 - ✅ Batch processing optimization (multiprocessing)
@@ -569,10 +626,10 @@ See [documentation/project-roadmap.md](documentation/project-roadmap.md) for det
 - ✅ Web UI for image upload
 
 **Upcoming Features:**
-- � Advanced analytics and heatmaps
 - 🔐 API authentication and rate limiting
 - ☁️ Cloud deployment guides (AWS, GCP, Azure)
 - 🎯 Activity recognition (sitting, running, playing)
+- 📧 Alert notifications for custom events
 
 ---
 
