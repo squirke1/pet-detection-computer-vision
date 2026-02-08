@@ -299,76 +299,116 @@ Process video files or webcam streams:
 
 ```bash
 # Process video file
-python src/infer_on_video.py --video path/to/video.mp4 --output result.mp4
+python src/infer_on_video.py --video input.mp4 --output result.mp4
 
-# Real-time webcam detection
+# Real-time webcam
 python src/infer_on_video.py --webcam --display
 
-# With frame skipping for better performance
-python src/infer_on_video.py --video input.mp4 --skip-frames 2 --display
-
-# Process without saving (display only)
-python src/infer_on_video.py --webcam --display --no-save
+# Skip frames for better performance
+python src/infer_on_video.py --video input.mp4 --skip-frames 2
 ```
 
-**Video Options:**
-- `--video VIDEO_PATH` - Input video file
-- `--webcam` - Use webcam as input (camera index 0)
-- `--skip-frames N` - Skip N frames between processing for better performance
-- `--display` - Show real-time video window
-- `--no-save` - Don't save output video
-- `--output PATH` - Custom output video path
+### Model Training
 
-**Performance Tips:**
-- Use `--skip-frames 1` to process every other frame (2x faster)
-- Use `--skip-frames 2` to process every third frame (3x faster)
-- Higher skip values = faster but less smooth tracking
+Train or fine-tune a YOLOv8 model on your custom dataset:
+
+```bash
+# Prepare dataset (split train/val/test)
+python src/prepare_data.py split --input data/raw --output data/processed
+
+# Validate dataset
+python src/prepare_data.py validate --data config/data.yaml
+
+# Train model
+python src/train.py --data config/data.yaml --epochs 100 --batch 16
+
+# Resume training
+python src/train.py --data config/data.yaml --resume runs/train/exp/weights/last.pt
+```
+
+See [TRAINING.md](TRAINING.md) for comprehensive training guide.
+
+### Model Evaluation
+
+Evaluate model performance with comprehensive metrics:
+
+```bash
+# Basic evaluation
+python src/evaluate.py --model models/yolov8n-pets.pt --data config/data.yaml
+
+# With visualizations and reports
+python src/evaluate.py --model models/yolov8n-pets.pt --data config/data.yaml \
+    --save-plots --save-txt --save-json
+
+# Compare multiple models
+python src/evaluate.py --compare models/model1.pt models/model2.pt models/model3.pt \
+    --data config/data.yaml --save-plots
+
+# Speed benchmark
+python src/evaluate.py --model models/yolov8n-pets.pt --benchmark \
+    --benchmark-samples 200
+```
+
+**Evaluation Metrics:**
+- mAP@0.5 and mAP@0.5:0.95
+- Precision, Recall, F1-Score
+- Per-class performance
+- Confusion matrix
+- Inference speed (FPS)
+
+### Visualization Tools
+
+Visualize training progress and results:
+
+```bash
+# Plot training history
+python src/visualize_metrics.py training --results runs/train/exp/results.csv \
+    --output outputs/training_history.png
+
+# Plot per-class performance
+python src/visualize_metrics.py class-performance --metrics outputs/evaluation/metrics.json \
+    --output outputs/class_performance.png
+```
 
 ---
 
 ## 📁 Project Structure
 ```
-pet-detection-yolov8/
+pet-detection-computer-vision/
+├─ config/
+│  └─ data.yaml                  # Dataset configuration
 ├─ data/
-│  ├─ raw/
-│  ├─ processed/
-│  └─ annotations/
+│  ├─ raw/                       # Raw images
+│  ├─ processed/                 # Processed datasets
+│  └─ annotations/               # Annotation files
 ├─ models/
-│  └─ yolov8n-pets.pt
+│  └─ yolov8n-pets.pt           # Trained model weights
 ├─ notebooks/
 │  ├─ 01_exploration.ipynb
 │  ├─ 02_edge_detection_features.ipynb
 │  └─ 03_yolo_edge_integration.ipynb
 ├─ src/
-│  ├─ infer_on_image.py
-│  ├─ infer_on_folder.py
-│  ├─ infer_enhanced.py          # NEW: Enhanced inference with CV features
-│  └─ utils.py
+│  ├─ infer_on_image.py          # Single image inference
+│  ├─ infer_on_folder.py         # Batch processing (multiprocessing)
+│  ├─ infer_on_video.py          # Video & webcam processing
+│  ├─ infer_enhanced.py          # Enhanced inference with CV features
+│  ├─ train.py                   # Model training pipeline
+│  ├─ prepare_data.py            # Dataset preparation utilities
+│  ├─ evaluate.py                # Model evaluation & metrics
+│  ├─ visualize_metrics.py       # Visualization tools
+│  └─ utils.py                   # Utility functions
 ├─ outputs/
-│  ├─ detections/
-│  └─ logs/
+│  ├─ detections/                # Detection results
+│  ├─ evaluation/                # Evaluation reports & plots
+│  └─ logs/                      # Execution logs
+├─ documentation/
+│  └─ project-roadmap.md         # Development roadmap
 ├─ requirements.txt
 ├─ README.md
+├─ TRAINING.md                   # Training documentation
 └─ LICENSE
 ```
 
-## Usage
-
-### Basic Detection
-```bash
-python src/infer_on_image.py --image data/raw/my_dogs.jpg
-```
-
-### Enhanced Detection with Edge Features
-```bash
-# With edge detection overlay
-python src/infer_enhanced.py --image data/raw/my_dogs.jpg --show-edges
-
-# With keypoint visualization
-python src/infer_enhanced.py --image data/raw/my_dogs.jpg --show-keypoints
-
-# With complete feature analysis
-python src/infer_enhanced.py --image data/raw/my_dogs.jpg --show-edges --show-keypoints --analyze-features
 ---
 
 ## 🔄 CI/CD
@@ -452,12 +492,18 @@ For questions or discussions, please open an issue on GitHub.
 
 See [documentation/project-roadmap.md](documentation/project-roadmap.md) for detailed development plans.
 
+**Completed Features (v2.0):**
+- ✅ Video processing and real-time detection
+- ✅ Model training and fine-tuning utilities
+- ✅ Model evaluation with comprehensive metrics
+- ✅ Batch processing optimization (multiprocessing)
+- ✅ Enhanced CV features integration
+
 **Upcoming Features:**
-- 🎥 Video processing and real-time detection
-- 📊 Model training and fine-tuning utilities
 - 🔍 Multi-object tracking across frames
 - 🌐 REST API and web interface
 - 🐳 Docker containerization
+- 📈 Advanced analytics and heatmaps
 
 ---
 
