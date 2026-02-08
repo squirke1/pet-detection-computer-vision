@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # CPU-based inference
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pet-detection-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/yolov8n-pets.pt
+      - CONF_THRESHOLD=0.25
+    volumes:
+      - ./models:/app/models:ro
+      - ./outputs:/app/outputs
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # GPU-accelerated inference (requires NVIDIA Docker)
+  api-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pet-detection-api-gpu
+    ports:
+      - "8001:8000"
+    environment:
+      - MODEL_PATH=/app/models/yolov8n-pets.pt
+      - CONF_THRESHOLD=0.25
+    volumes:
+      - ./models:/app/models:ro
+      - ./outputs:/app/outputs
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    profiles:
+      - gpu
+
+networks:
+  default:
+    name: pet-detection-network
