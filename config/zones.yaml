@@ -1,0 +1,65 @@
+# Zone Configuration for Track Analytics
+# Define regions of interest (ROIs) for zone-based analysis
+
+# Zones are rectangular areas defined by top-left (x1, y1) and bottom-right (x2, y2) coordinates
+# Colors are in RGB format [R, G, B] (0-255)
+
+zones:
+  - name: "Food Bowl"
+    x1: 100
+    y1: 100
+    x2: 300
+    y2: 300
+    color: [255, 165, 0]  # Orange
+    
+  - name: "Water Bowl"
+    x1: 350
+    y1: 100
+    x2: 550
+    y2: 300
+    color: [0, 191, 255]  # Deep Sky Blue
+    
+  - name: "Play Area"
+    x1: 100
+    y1: 350
+    x2: 550
+    y2: 650
+    color: [50, 205, 50]  # Lime Green
+    
+  - name: "Rest Zone"
+    x1: 600
+    y1: 100
+    x2: 900
+    y2: 400
+    color: [238, 130, 238]  # Violet
+    
+  - name: "Entry/Exit"
+    x1: 600
+    y1: 450
+    x2: 900
+    y2: 650
+    color: [255, 69, 0]  # Red Orange
+
+# Usage Examples:
+#
+# 1. Generate zone visualization:
+#    python src/analyze_tracks.py --tracks outputs/tracks.json \
+#        --zones config/zones.yaml --zone-viz outputs/zones.png
+#
+# 2. Calculate zone statistics:
+#    python src/analyze_tracks.py --tracks outputs/tracks.json \
+#        --zones config/zones.yaml --zone-stats outputs/zone_stats.png
+#
+# 3. Complete zone analysis with report:
+#    python src/analyze_tracks.py --tracks outputs/tracks.json \
+#        --zones config/zones.yaml --report outputs/report.html
+#
+# 4. Combine with heatmap:
+#    python src/analyze_tracks.py --tracks outputs/tracks.json \
+#        --zones config/zones.yaml --all --output-dir outputs/analytics/
+
+# Notes:
+# - Coordinates are in pixels relative to video frame
+# - Use video editing software or OpenCV to determine exact coordinates
+# - Zones can overlap (each point is assigned to first matching zone)
+# - Adjust coordinates based on your specific video dimensions
