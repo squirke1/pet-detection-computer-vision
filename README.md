@@ -308,6 +308,36 @@ python src/infer_on_video.py --webcam --display
 python src/infer_on_video.py --video input.mp4 --skip-frames 2
 ```
 
+### Object Tracking
+
+Track individual pets across video frames with persistent IDs:
+
+```bash
+# Basic tracking
+python src/track_video.py --video input.mp4 --output tracked.mp4
+
+# With trajectory visualization
+python src/track_video.py --video input.mp4 --show-trajectories \\
+    --trajectory-length 50
+
+# Live display with statistics
+python src/track_video.py --video input.mp4 --display --show-stats
+
+# Save track data for analysis
+python src/track_video.py --video input.mp4 --save-tracks tracks.json
+
+# Use ByteTrack (faster)
+python src/track_video.py --video input.mp4 --tracker bytetrack.yaml
+```
+
+**Tracking Features:**
+- Persistent object IDs across frames
+- Movement trajectory visualization
+- Unique pet counting
+- Speed and distance analysis
+- Track history recording
+- BoT-SORT or ByteTrack algorithms
+
 ### REST API & Web Interface
 
 Run the detection API server with web UI:
@@ -414,6 +444,7 @@ pet-detection-computer-vision/
 │  ├─ infer_on_image.py          # Single image inference
 │  ├─ infer_on_folder.py         # Batch processing (multiprocessing)
 │  ├─ infer_on_video.py          # Video & webcam processing
+│  ├─ track_video.py             # Multi-object tracking
 │  ├─ infer_enhanced.py          # Enhanced inference with CV features
 │  ├─ train.py                   # Model training pipeline
 │  ├─ prepare_data.py            # Dataset preparation utilities
@@ -526,8 +557,9 @@ For questions or discussions, please open an issue on GitHub.
 
 See [documentation/project-roadmap.md](documentation/project-roadmap.md) for detailed development plans.
 
-**Completed Features (v2.1):**
+**Completed Features (v3.0):**
 - ✅ Video processing and real-time detection
+- ✅ Multi-object tracking with persistent IDs
 - ✅ Model training and fine-tuning utilities
 - ✅ Model evaluation with comprehensive metrics
 - ✅ Batch processing optimization (multiprocessing)
@@ -537,10 +569,10 @@ See [documentation/project-roadmap.md](documentation/project-roadmap.md) for det
 - ✅ Web UI for image upload
 
 **Upcoming Features:**
-- 🔍 Multi-object tracking across frames (DeepSORT/ByteTrack)
-- 📈 Advanced analytics and heatmaps
+- � Advanced analytics and heatmaps
 - 🔐 API authentication and rate limiting
 - ☁️ Cloud deployment guides (AWS, GCP, Azure)
+- 🎯 Activity recognition (sitting, running, playing)
 
 ---
 
