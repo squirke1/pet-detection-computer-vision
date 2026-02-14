@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / 'src'))
 
-from ultralytics import YOLO
+from ultralytics import YOLO  # type: ignore
 import cv2
 import numpy as np
 from utils import draw_detections, extract_edge_features, detect_keypoints_orb

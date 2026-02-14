@@ -118,8 +118,12 @@ class TestInferOnFolderScript:
         assert result.returncode == 0, f"Script failed with: {result.stderr}"
         assert output_dir.exists()
         
-        # Check that output images were created
-        output_images = list(output_dir.glob("*.jpg"))
+        # Check that output images were created (in visualizations subfolder)
+        vis_dir = output_dir / "visualizations"
+        if vis_dir.exists():
+            output_images = list(vis_dir.glob("*.jpg"))
+        else:
+            output_images = list(output_dir.glob("*.jpg"))
         assert len(output_images) > 0, "No output images were created"
     
     def test_folder_with_no_images(self, tmp_path):
