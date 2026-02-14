@@ -14,8 +14,15 @@ tests/fixtures/*.jpg
 tests/fixtures/*.png
 test_outputs/
 
+# Inference outputs
+outputs/detections/
+outputs/logs/
+
 # Model files (tracked only in models/ directory)
 notebooks/*.pt
 
 # Documentation (local notes and planning)
 documentation/
+
+# macOS system files
+.DS_Store

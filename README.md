@@ -189,6 +189,20 @@ See [requirements.txt](requirements.txt) for complete list.
 
 ## 🎯 Quick Start
 
+### Option 1: Docker (Recommended for Quick Testing)
+
+The fastest way to try the system:
+
+```bash
+# Start the API server with web UI
+docker-compose up
+
+# Access the web interface at http://localhost:8000
+# Upload images for detection via the browser
+```
+
+### Option 2: Python Scripts
+
 Detect pets in an image with one command:
 
 ```bash

@@ -182,6 +182,14 @@ async def root():
             display: none;
         }
         
+        #canvas {
+            max-width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
         #results {
             margin-top: 20px;
             padding: 20px;
@@ -285,6 +293,7 @@ async def root():
         <div class="loader" id="loader"></div>
         
         <img id="preview" />
+        <canvas id="canvas"></canvas>
         
         <div id="results"></div>
         
@@ -300,6 +309,7 @@ async def root():
         const fileInput = document.getElementById('fileInput');
         const detectBtn = document.getElementById('detectBtn');
         const preview = document.getElementById('preview');
+        const canvas = document.getElementById('canvas');
         const results = document.getElementById('results');
         const loader = document.getElementById('loader');
         let selectedFile = null;
@@ -346,6 +356,7 @@ async def root():
             
             detectBtn.disabled = false;
             results.style.display = 'none';
+            canvas.style.display = 'none';
         }
         
         // Detect button
@@ -382,8 +393,63 @@ async def root():
             }
         });
         
+        function drawBoundingBoxes(detections) {
+            const ctx = canvas.getContext('2d');
+            const img = preview;
+            
+            // Wait for image to load if not ready
+            if (!img.complete) {
+                img.onload = () => drawBoundingBoxes(detections);
+                return;
+            }
+            
+            // Hide preview, show canvas
+            preview.style.display = 'none';
+            
+            // Set canvas size to match image
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            
+            // Draw image
+            ctx.drawImage(img, 0, 0);
+            
+            // Draw bounding boxes
+            detections.forEach((det) => {
+                const [x1, y1, x2, y2] = det.bbox;
+                const width = x2 - x1;
+                const height = y2 - y1;
+                
+                // Box color based on class
+                const color = det.class_name === 'dog' ? '#3b82f6' : '#10b981';
+                
+                // Draw box
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 4;
+                ctx.strokeRect(x1, y1, width, height);
+                
+                // Draw label background
+                const label = `${det.class_name} ${(det.confidence * 100).toFixed(1)}%`;
+                ctx.font = 'bold 18px Arial';
+                const textWidth = ctx.measureText(label).width;
+                
+                ctx.fillStyle = color;
+                ctx.fillRect(x1, y1 - 30, textWidth + 12, 30);
+                
+                // Draw label text
+                ctx.fillStyle = 'white';
+                ctx.fillText(label, x1 + 6, y1 - 8);
+            });
+            
+            canvas.style.display = 'block';
+        }
+        
         function displayResults(data) {
             const { detections, num_detections, inference_time_ms, model_name } = data;
+            
+            // Draw boxes on image
+            if (num_detections > 0) {
+                drawBoundingBoxes(detections);
+            }
             
             let html = '<h3 style="margin-bottom: 15px;">Detection Results</h3>';
             
