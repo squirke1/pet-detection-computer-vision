@@ -118,7 +118,15 @@ class BatchProcessor:
         
         if not image_paths:
             print(f"❌ No images found in {input_folder}")
-            return {'total_images': 0}
+            return {
+                'total_images': 0,
+                'images_processed': 0,
+                'images_with_detections': 0,
+                'total_detections': 0,
+                'elapsed_time': 0.0,
+                'images_per_second': 0.0,
+                'avg_detections_per_image': 0.0
+            }
         
         print(f"✅ Found {len(image_paths)} images")
         print(f"🚀 Using {self.num_workers} CPU workers + batch GPU inference (batch_size={self.batch_size})\n")
